@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="830bf809-46ad-4976-8f87-d468ef7af3f3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/tls.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/alert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/auth_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boring.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boring_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cache.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cache_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cipher_suites.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common_string.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/conn.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/conn_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/example_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fipsonly/fipsonly.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fipsonly/fipsonly_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/generate_cert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_client_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_client_tls13.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_messages.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_messages_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_server_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_server_tls13.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handshake_unix_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/key_agreement.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/key_schedule.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/key_schedule_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/link_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notboring.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prf.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prf_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ClientCert-ECDSA-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ClientCert-ECDSA-RSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ClientCert-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ClientCert-RSA-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ClientCert-RSA-RSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ECDHE-RSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv10-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv11-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv11-ECDHE-RSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv11-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv11-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-AES128-GCM-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-AES128-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-AES256-GCM-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ALPN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ALPN-NoMatch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-ECDSA-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-ECDSA-RSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-RSA-AES256-GCM-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-RSA-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-RSA-RSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-RSA-RSAPKCS1v15" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ClientCert-RSA-RSAPSS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-ECDSA-AES-GCM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-ECDSA-AES128-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-ECDSA-AES256-GCM-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-ECDSA-CHACHA20-POLY1305" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-RSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-RSA-AES128-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ECDHE-RSA-CHACHA20-POLY1305" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-P256-ECDHE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-RenegotiateOnce" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-RenegotiateTwice" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-RenegotiateTwiceRejected" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-RenegotiationRejected" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-SCT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv12-X25519-ECDHE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-AES128-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-AES256-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ALPN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-CHACHA20-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ClientCert-ECDSA-RSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ClientCert-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ClientCert-RSA-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ClientCert-RSA-RSAPSS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ECDSA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-HelloRetryRequest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-KeyUpdate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-P256-ECDHE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Client-TLSv13-X25519-ECDHE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv10-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv10-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv10-RSA-3DES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv10-RSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv10-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv11-FallbackSCSV" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv11-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ALPN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ALPN-Fallback" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ALPN-NoMatch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ALPN-NotConfigured" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ClientAuthRequestedAndECDSAGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ClientAuthRequestedAndEd25519Given" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ClientAuthRequestedAndGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ClientAuthRequestedAndPKCS1v15Given" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ClientAuthRequestedNotGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-IssueTicket" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-IssueTicketPreDisable" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-P256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-3DES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-AES-GCM" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-AES256-GCM-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-RC4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-RSAPKCS1v15" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-RSA-RSAPSS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-Resume" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-ResumeDisabled" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-SNI" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-SNI-GetCertificate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-SNI-GetCertificateNotFound" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv12-X25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-AES128-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-AES256-SHA384" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ALPN" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ALPN-Fallback" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ALPN-NoMatch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ALPN-NotConfigured" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-CHACHA20-SHA256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ClientAuthRequestedAndECDSAGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ClientAuthRequestedAndEd25519Given" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ClientAuthRequestedAndGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ClientAuthRequestedNotGiven" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ECDHE-ECDSA-AES" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-Ed25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ExportKeyingMaterial" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-HelloRetryRequest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-IssueTicket" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-IssueTicketPreDisable" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-P256" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-RSA-RSAPSS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-RSA-RSAPSS-TooSmall" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-Resume" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-Resume-HelloRetryRequest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-ResumeDisabled" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/Server-TLSv13-X25519" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/example-cert.pem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testdata/example-key.pem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ticket.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tls.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tls_test.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../.." />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2mJn2WoVTbd0GefF0yGv15btiUP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "C:/Users/21557",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-2946fb9b3188-155fe4b6e3a0-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.14475.38" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
