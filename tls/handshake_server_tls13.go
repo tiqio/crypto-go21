@@ -8,6 +8,8 @@ import (
 	"bytes"
 	"context"
 	"crypto"
+	"crypto/ecdsa"
+	"crypto/gmsm/sm2"
 	"crypto/hmac"
 	"crypto/rsa"
 	"encoding/binary"
@@ -156,17 +158,27 @@ func (hs *serverHandshakeStateTLS13) processClientHello() error {
 		return errors.New("tls: client sent unexpected early data")
 	}
 
-	hs.hello.sessionId = hs.clientHello.sessionId
-	hs.hello.compressionMethod = compressionNone
-
-	preferenceList := defaultCipherSuitesTLS13
-	if !hasAESGCMHardwareSupport || !aesgcmPreferred(hs.clientHello.cipherSuites) {
-		preferenceList = defaultCipherSuitesTLS13NoAES
-	}
-	for _, suiteID := range preferenceList {
-		hs.suite = mutualCipherSuiteTLS13(hs.clientHello.cipherSuites, suiteID)
-		if hs.suite != nil {
-			break
+	if hs.suite == nil {
+		var preferenceList []uint16
+		for _, suiteID := range c.config.CipherSuites {
+			for _, suite := range cipherSuitesTLS13 {
+				if suite.id == suiteID {
+					preferenceList = append(preferenceList, suiteID)
+					break
+				}
+			}
+		}
+		if len(preferenceList) == 0 {
+			preferenceList = defaultCipherSuitesTLS13
+			if !hasAESGCMHardwareSupport || !aesgcmPreferred(hs.clientHello.cipherSuites) {
+				preferenceList = defaultCipherSuitesTLS13NoAES
+			}
+		}
+		for _, suiteID := range preferenceList {
+			hs.suite = mutualCipherSuiteTLS13(hs.clientHello.cipherSuites, suiteID)
+			if hs.suite != nil {
+				break
+			}
 		}
 	}
 	if hs.suite == nil {
@@ -394,7 +406,7 @@ func (hs *serverHandshakeStateTLS13) checkForResumption() error {
 // cloneHash uses the encoding.BinaryMarshaler and encoding.BinaryUnmarshaler
 // interfaces implemented by standard library hashes to clone the state of in
 // to a new instance of h. It returns nil if the operation fails.
-func cloneHash(in hash.Hash, h crypto.Hash) hash.Hash {
+func cloneHash(in hash.Hash, h Hash) hash.Hash {
 	// Recreate the interface to avoid importing encoding.
 	type binaryMarshaler interface {
 		MarshalBinary() (data []byte, err error)
@@ -704,7 +716,17 @@ func (hs *serverHandshakeStateTLS13) sendServerCertificate() error {
 	if sigType == signatureRSAPSS {
 		signOpts = &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthEqualsHash, Hash: sigHash}
 	}
-	sig, err := hs.cert.PrivateKey.(crypto.Signer).Sign(c.config.rand(), signed, signOpts)
+	//sig, err := hs.cert.PrivateKey.(crypto.Signer).Sign(c.config.rand(), signed, signOpts)
+	var sig []byte
+	ep, ok := hs.cert.PrivateKey.(*ecdsa.PrivateKey)
+
+	if ok && ep.Curve.Params().Name == sm2.P256().Params().Name {
+		sm2pri := sm2.PrivateKey{PrivateKey: *ep}
+		sig, err = sm2pri.Sign(c.config.rand(), signed, signOpts)
+
+	} else {
+		sig, err = hs.cert.PrivateKey.(crypto.Signer).Sign(c.config.rand(), signed, signOpts)
+	}
 	if err != nil {
 		public := hs.cert.PrivateKey.(crypto.Signer).Public()
 		if rsaKey, ok := public.(*rsa.PublicKey); ok && sigType == signatureRSAPSS &&

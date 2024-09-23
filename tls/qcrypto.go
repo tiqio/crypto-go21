@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // Package crypto collects common cryptographic constants.
-package crypto
+package tls
 
 import (
 	"crypto/gmsm/sm3"

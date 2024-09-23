@@ -11,6 +11,7 @@ import (
 	"crypto/ecdh"
 	"crypto/ecdsa"
 	"crypto/ed25519"
+	"crypto/gmsm/smx509"
 	"crypto/rsa"
 	"crypto/subtle"
 	"crypto/x509"
@@ -962,20 +963,63 @@ func (c *Conn) verifyServerCertificate(certificates [][]byte) error {
 	activeHandles := make([]*activeCert, len(certificates))
 	certs := make([]*x509.Certificate, len(certificates))
 	for i, asn1Data := range certificates {
-		cert, err := globalCertCache.newCert(asn1Data)
+		cert, err := smx509.ParseCertificate(asn1Data)
 		if err != nil {
 			c.sendAlert(alertBadCertificate)
 			return errors.New("tls: failed to parse certificate from server: " + err.Error())
 		}
-		if cert.cert.PublicKeyAlgorithm == x509.RSA {
-			n := cert.cert.PublicKey.(*rsa.PublicKey).N.BitLen()
-			if max, ok := checkKeySize(n); !ok {
-				c.sendAlert(alertBadCertificate)
-				return fmt.Errorf("tls: server sent certificate containing RSA key larger than %d bits", max)
-			}
+		var exkusg []x509.ExtKeyUsage
+		for ii := 0; ii < len(cert.ExtKeyUsage); ii++ {
+			exkusg = append(exkusg, x509.ExtKeyUsage(cert.ExtKeyUsage[ii]))
 		}
-		activeHandles[i] = cert
-		certs[i] = cert.cert
+
+		var cert1 x509.Certificate = x509.Certificate{
+			Raw:                         cert.Raw,
+			RawTBSCertificate:           cert.RawTBSCertificate,
+			RawSubjectPublicKeyInfo:     cert.RawSubjectPublicKeyInfo,
+			RawSubject:                  cert.RawSubject,
+			RawIssuer:                   cert.RawIssuer,
+			Signature:                   cert.Signature,
+			SignatureAlgorithm:          x509.SignatureAlgorithm(cert.SignatureAlgorithm),
+			PublicKeyAlgorithm:          x509.PublicKeyAlgorithm(cert.PublicKeyAlgorithm),
+			PublicKey:                   cert.PublicKey,
+			Version:                     cert.Version,
+			SerialNumber:                cert.SerialNumber,
+			Issuer:                      cert.Issuer,
+			Subject:                     cert.Subject,
+			NotBefore:                   cert.NotBefore,
+			NotAfter:                    cert.NotAfter,
+			KeyUsage:                    x509.KeyUsage(cert.KeyUsage),
+			Extensions:                  cert.Extensions,
+			ExtraExtensions:             cert.ExtraExtensions,
+			UnhandledCriticalExtensions: cert.UnhandledCriticalExtensions,
+			ExtKeyUsage:                 exkusg,
+			UnknownExtKeyUsage:          cert.UnknownExtKeyUsage,
+			BasicConstraintsValid:       cert.BasicConstraintsValid,
+			IsCA:                        cert.IsCA,
+			MaxPathLen:                  cert.MaxPathLen,
+			MaxPathLenZero:              cert.MaxPathLenZero,
+			SubjectKeyId:                cert.SubjectKeyId,
+			AuthorityKeyId:              cert.AuthorityKeyId,
+			OCSPServer:                  cert.OCSPServer,
+			IssuingCertificateURL:       cert.IssuingCertificateURL,
+			DNSNames:                    cert.DNSNames,
+			EmailAddresses:              cert.EmailAddresses,
+			IPAddresses:                 cert.IPAddresses,
+			URIs:                        cert.URIs,
+			PermittedDNSDomainsCritical: cert.PermittedDNSDomainsCritical,
+			PermittedDNSDomains:         cert.PermittedDNSDomains,
+			ExcludedDNSDomains:          cert.ExcludedDNSDomains,
+			PermittedIPRanges:           cert.PermittedIPRanges,
+			ExcludedIPRanges:            cert.ExcludedIPRanges,
+			PermittedEmailAddresses:     cert.PermittedEmailAddresses,
+			ExcludedEmailAddresses:      cert.ExcludedEmailAddresses,
+			PermittedURIDomains:         cert.PermittedURIDomains,
+			ExcludedURIDomains:          cert.ExcludedURIDomains,
+			CRLDistributionPoints:       cert.CRLDistributionPoints,
+			PolicyIdentifiers:           cert.PolicyIdentifiers,
+		}
+		certs[i] = &cert1
 	}
 
 	if !c.config.InsecureSkipVerify {

@@ -10,6 +10,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/elliptic"
+	"crypto/gmsm/sm2"
 	"crypto/rsa"
 	"errors"
 	"fmt"
@@ -54,6 +55,31 @@ func verifyHandshakeSignature(sigType uint8, pubkey crypto.PublicKey, hashFunc c
 		if err := rsa.VerifyPSS(pubKey, hashFunc, signed, sig, signOpts); err != nil {
 			return err
 		}
+	case signatureSM3:
+		//var pubKey *sm2.PublicKey
+		//pubKey, ok := pubkey.(*sm2.PublicKey)
+		//if !ok {
+		//	pubKey1, ok1 := pubkey.(*ecdsa.PublicKey)
+		//	if !ok1 {
+		//		return errors.New("tls: SM2 signing requires a SM2 public key")
+		//	}
+		//	pubKey = &sm2.PublicKey{
+		//		Curve: pubKey1.Curve,
+		//		X:     pubKey1.X,
+		//		Y:     pubKey1.Y,
+		//	}
+		//}
+		//if ok := pubKey.Verify(signed, sig); !ok {
+		//	return errors.New("verify sm2 signature error")
+		//}
+		pubKey, ok := pubkey.(*ecdsa.PublicKey)
+		if !ok {
+			return fmt.Errorf("expected an ECDSA SM2 public key, got %T", pubkey)
+		}
+		if !sm2.VerifyASN1(pubKey, signed, sig) {
+			return errors.New("ECDSA SM2 verification failure")
+		}
+
 	default:
 		return errors.New("internal error: unknown signature type")
 	}
@@ -86,7 +112,7 @@ func signedMessage(sigHash crypto.Hash, context string, transcript hash.Hash) []
 		b.Write(transcript.Sum(nil))
 		return b.Bytes()
 	}
-	h := sigHash.New()
+	h := Hash(sigHash).New()
 	h.Write(signaturePadding)
 	io.WriteString(h, context)
 	h.Write(transcript.Sum(nil))
@@ -105,6 +131,9 @@ func typeAndHashFromSignatureScheme(signatureAlgorithm SignatureScheme) (sigType
 		sigType = signatureECDSA
 	case Ed25519:
 		sigType = signatureEd25519
+	case SM2Sig_SM3:
+		sigType = signatureSM3
+
 	default:
 		return 0, 0, fmt.Errorf("unsupported signature algorithm: %v", signatureAlgorithm)
 	}
@@ -119,6 +148,8 @@ func typeAndHashFromSignatureScheme(signatureAlgorithm SignatureScheme) (sigType
 		hash = crypto.SHA512
 	case Ed25519:
 		hash = directSigning
+	case SM2Sig_SM3:
+		hash = crypto.Hash(SM3)
 	default:
 		return 0, 0, fmt.Errorf("unsupported signature algorithm: %v", signatureAlgorithm)
 	}
@@ -197,6 +228,8 @@ func signatureSchemesForCertificate(version uint16, cert *Certificate) []Signatu
 			sigAlgs = []SignatureScheme{ECDSAWithP384AndSHA384}
 		case elliptic.P521():
 			sigAlgs = []SignatureScheme{ECDSAWithP521AndSHA512}
+		case sm2.P256():
+			sigAlgs = []SignatureScheme{SM2Sig_SM3}
 		default:
 			return nil
 		}
@@ -210,6 +243,8 @@ func signatureSchemesForCertificate(version uint16, cert *Certificate) []Signatu
 		}
 	case ed25519.PublicKey:
 		sigAlgs = []SignatureScheme{Ed25519}
+	//case *sm2.PublicKey:
+	//	sigAlgs = []SignatureScheme{SM2Sig_SM3}
 	default:
 		return nil
 	}
@@ -275,12 +310,20 @@ func unsupportedCertificateError(cert *Certificate) error {
 		case elliptic.P256():
 		case elliptic.P384():
 		case elliptic.P521():
+		case sm2.P256():
 		default:
 			return fmt.Errorf("tls: unsupported certificate curve (%s)", pub.Curve.Params().Name)
 		}
 	case *rsa.PublicKey:
 		return fmt.Errorf("tls: certificate RSA key size too small for supported signature algorithms")
 	case ed25519.PublicKey:
+	//case *sm2.PublicKey:
+	//	switch pub.Curve {
+	//	case sm2.P256Sm2():
+	//	default:
+	//		return fmt.Errorf("tls: unsupported certificate curve (%s)", pub.Curve.Params().Name)
+	//	}
+
 	default:
 		return fmt.Errorf("tls: unsupported certificate key (%T)", pub)
 	}

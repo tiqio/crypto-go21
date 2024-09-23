@@ -12,6 +12,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/elliptic"
+	"crypto/gmsm/sm2"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha512"
@@ -137,6 +138,7 @@ const (
 type CurveID uint16
 
 const (
+	CurveSM2  CurveID = 41
 	CurveP256 CurveID = 23
 	CurveP384 CurveID = 24
 	CurveP521 CurveID = 25
@@ -186,6 +188,7 @@ const (
 	signatureRSAPSS
 	signatureECDSA
 	signatureEd25519
+	signatureSM3
 )
 
 // directSigning is a standard Hash value that signals that no pre-hashing
@@ -198,6 +201,8 @@ var directSigning crypto.Hash = 0
 // CertificateRequest. The two fields are merged to match with TLS 1.3.
 // Note that in TLS 1.2, the ECDSA algorithms are not constrained to P-256, etc.
 var defaultSupportedSignatureAlgorithms = []SignatureScheme{
+	//gm
+	SM2Sig_SM3, //RFC8998
 	PSSWithSHA256,
 	ECDSAWithP256AndSHA256,
 	Ed25519,
@@ -376,6 +381,9 @@ type ClientSessionCache interface {
 type SignatureScheme uint16
 
 const (
+	//gm
+	SM2Sig_SM3 SignatureScheme = 0x0708 //RFC8998
+
 	// RSASSA-PKCS1-v1_5 algorithms.
 	PKCS1WithSHA256 SignatureScheme = 0x0401
 	PKCS1WithSHA384 SignatureScheme = 0x0501
@@ -1071,7 +1079,7 @@ func supportedVersionsFromMax(maxVersion uint16) []uint16 {
 	return versions
 }
 
-var defaultCurvePreferences = []CurveID{X25519, CurveP256, CurveP384, CurveP521}
+var defaultCurvePreferences = []CurveID{CurveSM2, X25519, CurveP256, CurveP384, CurveP521}
 
 func (c *Config) curvePreferences() []CurveID {
 	if needFIPS() {
@@ -1259,6 +1267,8 @@ func (chi *ClientHelloInfo) SupportsCertificate(c *Certificate) error {
 				curve = CurveP384
 			case elliptic.P521():
 				curve = CurveP521
+			case sm2.P256():
+				curve = CurveSM2
 			default:
 				return supportsRSAFallback(unsupportedCertificateError(c))
 			}
@@ -1279,6 +1289,26 @@ func (chi *ClientHelloInfo) SupportsCertificate(c *Certificate) error {
 			}
 			ecdsaCipherSuite = true
 		case *rsa.PublicKey:
+
+		//case *sm2.PublicKey:
+		//	var curve CurveID
+		//	switch pub.Curve {
+		//	case sm2.P256Sm2():
+		//		curve = CurveSM2
+		//	default:
+		//		return supportsRSAFallback(unsupportedCertificateError(c))
+		//	}
+		//	var curveOk bool
+		//	for _, c := range chi.SupportedCurves {
+		//		if c == curve && conf.supportsCurve(c) {
+		//			curveOk = true
+		//			break
+		//		}
+		//	}
+		//	if !curveOk {
+		//		return errors.New("client doesn't support certificate curve")
+		//	}
+		//	ecdsaCipherSuite = true
 		default:
 			return supportsRSAFallback(unsupportedCertificateError(c))
 		}

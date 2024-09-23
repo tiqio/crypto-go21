@@ -9,6 +9,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/des"
+	"crypto/gmsm/sm4"
 	"crypto/hmac"
 	"crypto/internal/boring"
 	"crypto/rc4"
@@ -195,13 +196,25 @@ type cipherSuiteTLS13 struct {
 	id     uint16
 	keyLen int
 	aead   func(key, fixedNonce []byte) aead
-	hash   crypto.Hash
+	hash   Hash
+}
+
+type CipherSuiteTLS13 struct {
+	ID     uint16
+	KeyLen int
+	Hash   crypto.Hash
+	AEAD   func(key, fixedNonce []byte) cipher.AEAD
+}
+
+func (c *CipherSuiteTLS13) IVLen() int {
+	return aeadNonceLength
 }
 
 var cipherSuitesTLS13 = []*cipherSuiteTLS13{ // TODO: replace with a map.
-	{TLS_AES_128_GCM_SHA256, 16, aeadAESGCMTLS13, crypto.SHA256},
-	{TLS_CHACHA20_POLY1305_SHA256, 32, aeadChaCha20Poly1305, crypto.SHA256},
-	{TLS_AES_256_GCM_SHA384, 32, aeadAESGCMTLS13, crypto.SHA384},
+	{TLS_SM4_GCM_SM3, 16, aeadSM4GCMTLS13, SM3},
+	{TLS_AES_128_GCM_SHA256, 16, aeadAESGCMTLS13, SHA256},
+	{TLS_CHACHA20_POLY1305_SHA256, 32, aeadChaCha20Poly1305, SHA256},
+	{TLS_AES_256_GCM_SHA384, 32, aeadAESGCMTLS13, SHA384},
 }
 
 // cipherSuitesPreferenceOrder is the order in which we'll select (on the
@@ -269,6 +282,9 @@ var cipherSuitesTLS13 = []*cipherSuiteTLS13{ // TODO: replace with a map.
 //     The relative order of ECDSA and RSA cipher suites doesn't matter,
 //     as they depend on the certificate. Pick one to get a stable order.
 var cipherSuitesPreferenceOrder = []uint16{
+	//gm
+	TLS_SM4_GCM_SM3,
+
 	// AEADs w/ ECDHE
 	TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
 	TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
@@ -343,12 +359,14 @@ var (
 // disabled by default TLS 1.3 cipher suites. The same AES vs ChaCha20 logic as
 // cipherSuitesPreferenceOrder applies.
 var defaultCipherSuitesTLS13 = []uint16{
+	TLS_SM4_GCM_SM3,
 	TLS_AES_128_GCM_SHA256,
 	TLS_AES_256_GCM_SHA384,
 	TLS_CHACHA20_POLY1305_SHA256,
 }
 
 var defaultCipherSuitesTLS13NoAES = []uint16{
+	TLS_SM4_GCM_SM3,
 	TLS_CHACHA20_POLY1305_SHA256,
 	TLS_AES_128_GCM_SHA256,
 	TLS_AES_256_GCM_SHA384,
@@ -375,6 +393,14 @@ var aesgcmCiphers = map[uint16]bool{
 	// TLS 1.3
 	TLS_AES_128_GCM_SHA256: true,
 	TLS_AES_256_GCM_SHA384: true,
+}
+
+var nonAESGCMAEADCiphers = map[uint16]bool{
+	// TLS 1.2
+	TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305:   true,
+	TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305: true,
+	// TLS 1.3
+	TLS_CHACHA20_POLY1305_SHA256: true,
 }
 
 // aesgcmPreferred returns whether the first known cipher in the preference list
@@ -524,6 +550,11 @@ func aeadAESGCM(key, noncePrefix []byte) aead {
 	return ret
 }
 
+// AEADAESGCMTLS13 creates a new AES-GCM AEAD for TLS 1.3
+func AEADAESGCMTLS13(key, fixedNonce []byte) cipher.AEAD {
+	return aeadAESGCMTLS13(key, fixedNonce)
+}
+
 func aeadAESGCMTLS13(key, nonceMask []byte) aead {
 	if len(nonceMask) != aeadNonceLength {
 		panic("tls: internal error: wrong nonce length")
@@ -540,6 +571,27 @@ func aeadAESGCMTLS13(key, nonceMask []byte) aead {
 	ret := &xorNonceAEAD{aead: aead}
 	copy(ret.nonceMask[:], nonceMask)
 	return ret
+}
+
+func aeadSM4GCMTLS13(key, nonceMask []byte) aead {
+
+	if len(nonceMask) != aeadNonceLength {
+		panic("tls: internal error: wrong nonce length")
+	}
+	sm4, err := sm4.NewCipher(key)
+
+	if err != nil {
+		panic(err)
+	}
+	aead, err := cipher.NewGCM(sm4)
+	if err != nil {
+		panic(err)
+	}
+
+	ret := &xorNonceAEAD{aead: aead}
+	copy(ret.nonceMask[:], nonceMask)
+	return ret
+
 }
 
 func aeadChaCha20Poly1305(key, nonceMask []byte) aead {
@@ -632,8 +684,11 @@ func cipherSuiteByID(id uint16) *cipherSuite {
 }
 
 func mutualCipherSuiteTLS13(have []uint16, want uint16) *cipherSuiteTLS13 {
+	fmt.Println("have", have)
+	fmt.Println("want", want)
 	for _, id := range have {
 		if id == want {
+			fmt.Println("select", id)
 			return cipherSuiteTLS13ByID(id)
 		}
 	}
@@ -679,6 +734,7 @@ const (
 	TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 uint16 = 0xcca9
 
 	// TLS 1.3 cipher suites.
+	TLS_SM4_GCM_SM3              uint16 = 0x00c6
 	TLS_AES_128_GCM_SHA256       uint16 = 0x1301
 	TLS_AES_256_GCM_SHA384       uint16 = 0x1302
 	TLS_CHACHA20_POLY1305_SHA256 uint16 = 0x1303

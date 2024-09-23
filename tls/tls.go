@@ -17,6 +17,8 @@ import (
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/ed25519"
+	"crypto/gmsm/sm2"
+	"crypto/gmsm/smx509"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
@@ -291,7 +293,7 @@ func X509KeyPair(certPEMBlock, keyPEMBlock []byte) (Certificate, error) {
 
 	// We don't need to parse the public key for TLS, but we so do anyway
 	// to check that it looks sane and matches the private key.
-	x509Cert, err := x509.ParseCertificate(cert.Certificate[0])
+	x509Cert, err := smx509.ParseCertificate(cert.Certificate[0])
 	if err != nil {
 		return fail(err)
 	}
@@ -342,13 +344,13 @@ func parsePrivateKey(der []byte) (crypto.PrivateKey, error) {
 	}
 	if key, err := x509.ParsePKCS8PrivateKey(der); err == nil {
 		switch key := key.(type) {
-		case *rsa.PrivateKey, *ecdsa.PrivateKey, ed25519.PrivateKey:
+		case *rsa.PrivateKey, *ecdsa.PrivateKey, ed25519.PrivateKey, *sm2.PrivateKey:
 			return key, nil
 		default:
 			return nil, errors.New("tls: found unknown private key type in PKCS#8 wrapping")
 		}
 	}
-	if key, err := x509.ParseECPrivateKey(der); err == nil {
+	if key, err := smx509.ParseECPrivateKey(der); err == nil {
 		return key, nil
 	}
 
