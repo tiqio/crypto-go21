@@ -8,6 +8,7 @@ import (
 	"crypto/internal/edwards25519/field"
 	"crypto/internal/randutil"
 	"errors"
+	"hash"
 	"io"
 )
 
@@ -27,6 +28,16 @@ func X25519() Curve { return x25519 }
 var x25519 = &x25519Curve{}
 
 type x25519Curve struct{}
+
+func (c *x25519Curve) sm2mqv(sLocal, eLocal *PrivateKey, sRemote, eRemote *PublicKey) (*PublicKey, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c *x25519Curve) sm2za(md hash.Hash, pub *PublicKey, uid []byte) ([]byte, error) {
+	//TODO implement me
+	panic("implement me")
+}
 
 func (c *x25519Curve) String() string {
 	return "X25519"

@@ -1,14 +1,11 @@
-package sm2
+package ecdh
 
 import (
-	"encoding/binary"
+	"crypto/ecdh/sm2ec"
+	"crypto/ecdh/subtle"
 	"errors"
 	"hash"
 	"io"
-	"math/bits"
-
-	"crypto/sm2/sm2ec"
-	"crypto/sm2/subtle"
 )
 
 type sm2Curve struct {
@@ -177,7 +174,7 @@ func (c *sm2Curve) sm2za(md hash.Hash, pub *PublicKey, uid []byte) ([]byte, erro
 //
 // Multiple invocations of this function will return the same value, so it can
 // be used for equality checks and switch statements.
-func P256() Curve { return sm2P256 }
+func SM2() Curve { return sm2P256 }
 
 var sm2P256 = &sm2Curve{
 	name:              "sm2p256v1",
@@ -212,34 +209,3 @@ var sm2ConstantB = []byte{
 	0x4d, 0x5a, 0x9e, 0x4b, 0xcf, 0x65, 0x09, 0xa7,
 	0xf3, 0x97, 0x89, 0xf5, 0x15, 0xab, 0x8f, 0x92,
 	0xdd, 0xbc, 0xbd, 0x41, 0x4d, 0x94, 0x0e, 0x93}
-
-// isLess returns whether a < b, where a and b are big-endian buffers of the
-// same length and shorter than 72 bytes.
-func isLess(a, b []byte) bool {
-	if len(a) != len(b) {
-		panic("ecdh: internal error: mismatched isLess inputs")
-	}
-
-	// Copy the values into a fixed-size preallocated little-endian buffer.
-	// 72 bytes is enough for every scalar in this package, and having a fixed
-	// size lets us avoid heap allocations.
-	if len(a) > 72 {
-		panic("ecdh: internal error: isLess input too large")
-	}
-	bufA, bufB := make([]byte, 72), make([]byte, 72)
-	for i := range a {
-		bufA[i], bufB[i] = a[len(a)-i-1], b[len(b)-i-1]
-	}
-
-	// Perform a subtraction with borrow.
-	var borrow uint64
-	for i := 0; i < len(bufA); i += 8 {
-		limbA, limbB := binary.LittleEndian.Uint64(bufA[i:]), binary.LittleEndian.Uint64(bufB[i:])
-		_, borrow = bits.Sub64(limbA, limbB, borrow)
-	}
-
-	// If there is a borrow at the end of the operation, then a < b.
-	return borrow == 1
-}
-
-var errInvalidPrivateKey = errors.New("ecdh: invalid private key")

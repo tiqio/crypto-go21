@@ -4,7 +4,7 @@
 
 // Package randutil contains internal randomness utilities for various
 // crypto packages.
-package sm2
+package ecdh
 
 import (
 	"io"

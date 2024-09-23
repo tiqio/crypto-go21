@@ -10,6 +10,7 @@ import (
 	"crypto/internal/randutil"
 	"encoding/binary"
 	"errors"
+	"hash"
 	"io"
 	"math/bits"
 )
@@ -18,6 +19,16 @@ type nistCurve[Point nistPoint[Point]] struct {
 	name        string
 	newPoint    func() Point
 	scalarOrder []byte
+}
+
+func (c *nistCurve[Point]) sm2mqv(sLocal, eLocal *PrivateKey, sRemote, eRemote *PublicKey) (*PublicKey, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c *nistCurve[Point]) sm2za(md hash.Hash, pub *PublicKey, uid []byte) ([]byte, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 // nistPoint is a generic constraint for the nistec Point types.
