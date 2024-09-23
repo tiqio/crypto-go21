@@ -7,6 +7,7 @@ package tls
 import (
 	"crypto/ecdh"
 	"crypto/hmac"
+	"crypto/sm2"
 	"errors"
 	"fmt"
 	"hash"
@@ -139,7 +140,7 @@ func curveForCurveID(id CurveID) (ecdh.Curve, bool) {
 	case CurveP521:
 		return ecdh.P521(), true
 	case CurveSM2:
-		return ecdh.SM2(), true // sm2.P256
+		return sm2.P256(), true // sm2.P256
 	default:
 		return nil, false
 	}
@@ -155,7 +156,7 @@ func curveIDForCurve(curve ecdh.Curve) (CurveID, bool) {
 		return CurveP384, true
 	case ecdh.P521():
 		return CurveP521, true
-	case ecdh.SM2():
+	case sm2.P256():
 		return CurveSM2, true
 	default:
 		return 0, false
