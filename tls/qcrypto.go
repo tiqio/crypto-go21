@@ -7,6 +7,7 @@ package tls
 
 import (
 	"crypto/gmsm/sm3"
+	"crypto/sha256"
 	"hash"
 	"io"
 	"strconv"
@@ -132,6 +133,9 @@ var hashes = make([]func() hash.Hash, maxHash)
 func (h Hash) New() hash.Hash {
 	if h == SM3 {
 		return sm3.New()
+	}
+	if h == SHA256 {
+		return sha256.New()
 	}
 	if h > 0 && h < maxHash {
 		f := hashes[h]
