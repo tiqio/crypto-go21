@@ -7,7 +7,10 @@ package tls
 
 import (
 	"crypto/gmsm/sm3"
+	"crypto/md5"
+	"crypto/sha1"
 	"crypto/sha256"
+	"crypto/sha512"
 	"hash"
 	"io"
 	"strconv"
@@ -131,19 +134,53 @@ var hashes = make([]func() hash.Hash, maxHash)
 // New returns a new hash.Hash calculating the given hash function. New panics
 // if the hash function is not linked into the binary.
 func (h Hash) New() hash.Hash {
-	if h == SM3 {
+	switch h {
+	case SM3:
 		return sm3.New()
-	}
-	if h == SHA256 {
+	case SHA256:
 		return sha256.New()
+	//case MD4:
+	//	return md4.New() // import golang.org/x/crypto/md4
+	case MD5:
+		return md5.New() // import crypto/md5
+	case SHA1:
+		return sha1.New() // import crypto/sha1
+	case SHA224:
+		return sha256.New224() // import crypto/sha256
+	case SHA384:
+		return sha512.New384() // import crypto/sha512
+	case SHA512:
+		return sha512.New() // import crypto/sha512
+	case MD5SHA1:
+		// no specific implementation; MD5+SHA1 used for TLS RSA
+		// return appropriate hash function for MD5 and SHA1
+		// e.g., return md5.New() and sha1.New()
+	//case RIPEMD160:
+	//	return ripemd160.New() // import golang.org/x/crypto/ripemd160
+	//case SHA3_224:
+	//	return sha3.New224() // import golang.org/x/crypto/sha3
+	//case SHA3_256:
+	//	return sha3.New256() // import golang.org/x/crypto/sha3
+	//case SHA3_384:
+	//	return sha3.New384() // import golang.org/x/crypto/sha3
+	//case SHA3_512:
+	//	return sha3.New512() // import golang.org/x/crypto/sha3
+	case SHA512_224:
+		return sha512.New512_224() // import crypto/sha512
+	case SHA512_256:
+		return sha512.New512_256() // import crypto/sha512
+	//case BLAKE2s_256:
+	//	return blake2s.New256() // import golang.org/x/crypto/blake2s
+	//case BLAKE2b_256:
+	//	return blake2b.New256() // import golang.org/x/crypto/blake2b
+	//case BLAKE2b_384:
+	//	return blake2b.New384() // import golang.org/x/crypto/blake2b
+	//case BLAKE2b_512:
+	//	return blake2b.New512() // import golang.org/x/crypto/blake2b
+	default:
+		panic("crypto: requested hash function #" + strconv.Itoa(int(h)) + " is unavailable")
 	}
-	if h > 0 && h < maxHash {
-		f := hashes[h]
-		if f != nil {
-			return f()
-		}
-	}
-	panic("crypto: requested hash function #" + strconv.Itoa(int(h)) + " is unavailable")
+	return nil
 }
 
 // Available reports whether the given hash function is linked into the binary.
